@@ -258,6 +258,12 @@ void WriteBuffer(INT16* inputBuffer) {
 	std::cout << "unlock error: " << error << std::endl;
 }
 
+void SoundFromFile(std::string file) {
+
+
+
+}
+
 void Win32InitDSound() {
 	Win32InitDSound(GetConsoleWindow(), 48000, 48000 * 4);
 }
