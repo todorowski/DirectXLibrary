@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "DirectXLibrary.h"
-#include <iostream>
-#include <stdlib.h>
-
 #define M_PI 3.14159265358979323846264
 #define DIRECT_SOUND_CREATE(name)HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
+
+using std::fstream;
 
 void Win32InitDSound(HWND Window, INT32 SamplesPerSecond, INT32 bufferSize) {
 	BufferSize = bufferSize;
@@ -258,10 +257,31 @@ void WriteBuffer(INT16* inputBuffer) {
 	std::cout << "unlock error: " << error << std::endl;
 }
 
-void SoundFromFile(std::string file) {
+//WAV SHIT
 
+WAV_FILE LoadWavHeader(std::string path) {
+	//Header
+	WAV_FILE file = {};
+	FILE* inFile;
+	errno_t err = fopen_s(&inFile, path.c_str(), "r");
+		
+	int headerSize = sizeof(WAV_HEADER);
+	size_t bytesRead = fread(&file.wavHeader, 1, headerSize, inFile);
 
+	//Data
+	if (bytesRead > 0)
+	{
+		//Read the data 
+		uint16_t bytesPerSample = file.wavHeader.bitsPerSample / 8; //Number of bytes per sample 
+		uint64_t numSamples = file.wavHeader.ChunkSize / bytesPerSample; //How many samples are in the wav file? static const 
+		file.data = new int16_t[file.wavHeader.ChunkSize];
+		bytesRead = fread(file.data, sizeof file.data[0], file.wavHeader.ChunkSize / (sizeof file.data[0]), inFile);
+		
+		//while ((bytesRead = fread(buffer, sizeof buffer[0], BUFFER_SIZE / (sizeof buffer[0]), inFile)) > 0) 
+	}
+	fclose(inFile);
 
+	return file;
 }
 
 void Win32InitDSound() {

@@ -4,6 +4,7 @@
 #include <string>
 
 #define M_PI 3.14159265358979323846264
+using namespace std;
 
 int main()
 {
@@ -19,15 +20,18 @@ int main()
 
     //Win32InitDSound(GetDesktopWindow(), 48000, 48000*4);
     Win32InitDSound();
-    std::string hej = "";
-    std::cin >> hej;
-    std::cout << "AHHHHHHHHHHHHH!\n";
+    string hej = "";
+    cin >> hej;
+    cout << "AHHHHHHHHHHHHH!\n";
+    cin >> hej;
+	WAV_FILE file = LoadWavHeader("F:\Fagert.wav");
 
-    WriteBuffer(sineBuffer);
-    std::cin >> hej;
-    CombineWave(3000, 440, 3000, 659);
-    std::cin >> hej;
-    SquareWave(3000, 400);
-    std::cin >> hej;
+	WriteBuffer(file.data);
+
+    //CombineWave(3000, 440, 3000, 659);
+    cin >> hej;
+    //SquareWave(3000, 400);
+    cin >> hej;
+	
 
 }
