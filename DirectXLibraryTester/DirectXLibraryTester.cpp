@@ -8,30 +8,23 @@ using namespace std;
 
 int main()
 {
-    INT16 sineBuffer[48000 * 2];
-
-    for (int i = 0; i < 48000; i++) {
-        float wave_period = 48000.0f / 220.0f;
-        float volume = 30000;
-        INT16 sine = sin(i * (M_PI * 2.0f / wave_period)) * volume;
-        sineBuffer[i * 2] = sine;
-        sineBuffer[(i * 2) + 1] = sine;
-    }
-
-    //Win32InitDSound(GetDesktopWindow(), 48000, 48000*4);
     Win32InitDSound();
-    string hej = "";
-    cin >> hej;
-    cout << "AHHHHHHHHHHHHH!\n";
-    cin >> hej;
 	WAV_FILE file = LoadWavHeader("F:\Fagert.wav");
+	cout << "SamplesPerSec:" << file.wavHeader.bitsPerSample;
 
-	WriteBuffer(file.data);
+	//Pause
+	string hej = "";    
+	cin >> hej;
+	cout << "Playing Fagert1";
+	AddSound(file.data, file.wavHeader.ChunkSize, true);
 
-    //CombineWave(3000, 440, 3000, 659);
-    cin >> hej;
-    //SquareWave(3000, 400);
-    cin >> hej;
+	cin >> hej;
+	cout << "Playing Fagert2";
+	AddSound(file.data, file.wavHeader.ChunkSize, true);
 	
+	cin >> hej;
+	cout << "Playing Fagert3";
+	AddSound(file.data, file.wavHeader.ChunkSize, true);
 
+	cin >> hej;
 }

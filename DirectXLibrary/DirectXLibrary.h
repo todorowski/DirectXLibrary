@@ -7,12 +7,18 @@
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
+#include <thread>
 #pragma once
 
 #define DIRECTXLIBRARY_API __declspec(dllexport)
 
-LPDIRECTSOUNDBUFFER SecondaryBuffer;
-INT32 BufferSize;
+struct Sound{
+	int16_t* soundBuffer;
+	int soundBufferSize;
+	int16_t* writePos;
+	bool looping = false;
+};
 
 extern "C" DIRECTXLIBRARY_API struct WAV_HEADER {
 	uint8_t         RIFF[4];        // RIFF Header Magic header
@@ -37,18 +43,25 @@ extern "C" DIRECTXLIBRARY_API struct WAV_FILE {
 	int16_t* data;
 };
 
+LPDIRECTSOUNDBUFFER SecondaryBuffer;
+const INT32 SampleSize = 44100;
+const INT32 BufferSizeBytes = SampleSize * 4;
+std::vector<Sound> sounds;
+std::thread soundManagerThread;
 
+void StartBufferManagerThread();
+void BufferManagerThread();
+void Win32InitDSound(HWND Window);
 
-
-void Win32InitDSound(HWND Window, INT32 SamplesPerSecond, INT32 BufferSize);
-
-extern "C" DIRECTXLIBRARY_API void SineWave(int volume, float frequency);
+extern "C" DIRECTXLIBRARY_API INT16* SineWave(int volume, float frequency);
 
 extern "C" DIRECTXLIBRARY_API void SquareWave(int volume, float frequency);
 
 extern "C" DIRECTXLIBRARY_API void CombineWave(int volume, float frequency, int volume2, float frequency2);
 
-extern "C" DIRECTXLIBRARY_API void WriteBuffer(INT16*);
+extern "C" DIRECTXLIBRARY_API void WriteBuffer(INT16* SoundData, DWORD writePos, INT32 writeLengthBytes);
+
+extern "C" DIRECTXLIBRARY_API void AddSound(INT16* SoundData, uint32_t soundSize, bool looping);
 
 extern "C" DIRECTXLIBRARY_API void Win32InitDSound();
 
